@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="user.name"><br>
+        姓名：<span v-html="user.name"></span><br>
+        年龄：<span>{{user.age}}</span><br>
+        <button id="btn" v-on:click="changeVal">change</button>
+    </div>
+
+    <script src="./observe.js"></script>
+    <script src="./watcher.js"></script>
+    <script src="./compile.js"></script>
+    <script src="./mvvm.js"></script>
+    <script>
+        
+        const vm = new MVVM({
+            el: '#app',
+            data: {
+                user: {
+                    name: 'qwe',
+                    age: 10
+                }
+            },
+            methods: {
+                changeVal: function() {
+                    this.user.age++;
+                }
+            }
+        })
+
+        console.log(vm)
+
+    </script>
+</body>
+</html>
