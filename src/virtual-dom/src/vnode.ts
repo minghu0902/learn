@@ -1,5 +1,7 @@
 import { Props } from './modules/props';
 import { Attrs } from './modules/attributes';
+import { Classes } from './modules/class';
+import { VNodeStyle } from './modules/style';
 
 export interface VNode {
     sel: string | undefined;
@@ -13,6 +15,8 @@ export interface VNode {
 export interface VNodeData {
     props?: Props;
     attrs?: Attrs;
+    class?: Classes;
+    style?: VNodeStyle;
 }
 
 export function vnode(
