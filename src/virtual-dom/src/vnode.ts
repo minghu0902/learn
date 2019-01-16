@@ -2,6 +2,7 @@ import { Props } from './modules/props';
 import { Attrs } from './modules/attributes';
 import { Classes } from './modules/class';
 import { VNodeStyle } from './modules/style';
+import { Dataset } from './modules/dataset';
 
 export interface VNode {
     sel: string | undefined;
@@ -17,6 +18,7 @@ export interface VNodeData {
     attrs?: Attrs;
     class?: Classes;
     style?: VNodeStyle;
+    dataset?: Dataset;
 }
 
 export function vnode(

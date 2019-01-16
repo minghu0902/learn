@@ -2,7 +2,7 @@ import { VNode, VNodeData } from '../vnode';
 
 export type Classes = Record<string, boolean>;
 
-function updateClass(oldVnode: VNode, vnode: VNode) {
+function updateClass(oldVnode: VNode, vnode: VNode): void {
     let cur: any,
         key: string,
         elm: Element = vnode.elm as Element,
