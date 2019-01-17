@@ -3,6 +3,7 @@ import { Attrs } from './modules/attributes';
 import { Classes } from './modules/class';
 import { VNodeStyle } from './modules/style';
 import { Dataset } from './modules/dataset';
+import { On } from './modules/eventlisteners';
 
 export interface VNode {
     sel: string | undefined;
@@ -19,6 +20,7 @@ export interface VNodeData {
     class?: Classes;
     style?: VNodeStyle;
     dataset?: Dataset;
+    on?: On;
 }
 
 export function vnode(

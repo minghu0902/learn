@@ -93,3 +93,4 @@ function applyRemoveStyle(vnode: VNode, rm: () => void): void {
         if(amount === 0) rm();
     })
 }
+
