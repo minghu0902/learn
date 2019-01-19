@@ -21,17 +21,18 @@ export interface VNodeData {
     style?: VNodeStyle;
     dataset?: Dataset;
     on?: On;
+    key?: string | number;
 }
 
 export function vnode(
     sel: string | undefined,
     data: VNodeData | undefined,
     children: Array<VNode | string> | undefined,
-    elm: Node | undefined,
     text: string | undefined,
-    key: string | number | undefined
+    elm: Node | undefined
 ): VNode {
-    return { sel, data, children, elm, text, key}
+    const key = data ? data.key : undefined;
+    return { sel, data, children, text, elm, key: key }
 }
 
 export default vnode;
