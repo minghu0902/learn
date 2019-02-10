@@ -7,7 +7,7 @@ var C = {
         var ctx = context,
             w = ctx.canvas.width,
             h = ctx.canvas.height;
-        color = color || 'rgba(0, 0, 0, .7)',
+            color = color || 'rgba(0, 0, 0, .7)',
             stepX = stepX || 10,
             stepY = stepY || 10;
         ctx.save();
