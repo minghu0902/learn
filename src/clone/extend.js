@@ -17,7 +17,7 @@ function extend() {
         if(target === item) {
             continue;
         }
-        if(item) {
+        if(item && typeof item === 'object') {
             for(var key in item) {
                 src = target[key];
                 copy = item[key];
