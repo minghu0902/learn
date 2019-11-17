@@ -17,7 +17,7 @@ function spawn(genFn) {
         Promise.resolve(v.value).then((value) => {
           step(value)
         }, (err) => {
-          reject(err)
+          g.throw(err)
         })
       }
     }
