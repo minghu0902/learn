@@ -13,6 +13,12 @@ function flatten(arr=[]) {
     })
 }
 
+// 指定层数
+function flatten(arr=[], n=1) {
+    return n > 0 ? arr.reduce((prev, current) => prev.concat(Array.isArray(current) ? flatten(current, --n) : current), [])
+                 : arr.slice()
+}
+
 function flatten(arr=[]) {
     const result = []
     for(let item of arr) {
@@ -25,6 +31,16 @@ function flatten(arr=[]) {
     return result;
 }
 
+function flatten(arr=[]) {
+    const flattened = [];
+    (function flat(arr) {
+        arr.forEach(item => {
+            Array.isArray(item) ? flat(item) : flattened.push(item)
+        })
+    })(arr);
+    return flattened
+}
+
 function* flatten(arr=[]) {
     for (let item of arr) {
         if (Array.isArray(item)) {
@@ -33,5 +49,9 @@ function* flatten(arr=[]) {
             yield item
         }
     }
+}
+
+function flatten(arr=[]) {
+    return arr.flat(Infinity)
 }
 
