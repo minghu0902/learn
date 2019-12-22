@@ -40,6 +40,7 @@ function Animate(options = {}) {
 
   options = Object.assign(defaultOptions, options)
 
+  this._options = options
   this._from = options.from
   this._to = options.to
   this._duration = options.duration
@@ -53,6 +54,7 @@ function Animate(options = {}) {
 
   this._startTime = Date.now()
   this._differenceTime = 0
+  this._repeatCount = options.repeat
   this._reversed = false
   this._state = STATE.PENDDING
 
@@ -69,16 +71,15 @@ Animate.prototype = {
     if (this._state === STATE.RUNNING) {
       return
     }
-
+    
     this._state = STATE.RUNNING
-
     this._startTime = Date.now()
 
     if (isTypeof(this._delay, 'Number')) {
 
       this._startTime += this._delay * 1000
     }
-  
+
     if (isTypeof(this._startCallback, 'Function')) {
 
       this._startCallback.call(this)
@@ -155,21 +156,27 @@ Animate.prototype = {
           this._state = STATE.PENDDING
           this._reverseValue()
           this.start()
+
           return
         } 
 
         this._reverseValue()
       }
 
-      if (this._repeat > 0) {
+      if (this._repeatCount > 0) {
 
-        this._repeat--
+        this._repeatCount--
         this._state = STATE.PENDDING
         this.start()
+
         return
       }
 
       this._state = STATE.END
+
+      if (this._repeat > 0) {
+        this._repeatCount = this._repeat
+      }
       
       if (isTypeof(this._endCallback, 'Function')) {
 
