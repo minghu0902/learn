@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+    }
+    #ball {
+      position: absolute;
+      top: 0;
+      left: 100px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: burlywood;
+    }
+    #operate {
+      position: absolute;
+      top: 120px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="ball"></div>
+    <div id="operate">
+      <button id="start" type="button">开始</button>
+      <button id="pause" type="button">暂停</button>
+      <button id="resume" type="button">恢复</button>
+    </div>
+  </div>
+
+  <script src="./tween.js"></script>
+  <script src="./animate.js"></script>
+  <script>
+
+    const ball = document.getElementById('ball')
+    const start = document.getElementById('start')
+    const pause = document.getElementById('pause')
+    const resume = document.getElementById('resume')
+    
+    const animate = new Animate({
+      from: { left: 0 },
+      to: { left: 500 },
+      duration: 1.5,
+      delay: 1,
+      reverse: true,
+      repeat: 1,
+      easing: 'Elastic.In',
+      onStart: function () {
+        console.log('start')
+      },
+      onUpdate: function (current, from, to) {
+        console.log('update', current)
+        ball.style.transform = 'translate3d(' + current.left + 'px, 0, 0)'
+      },
+      onEnd: function () {
+        console.log('end')
+      }
+    })
+    
+    start.onclick = function () {
+      animate.start()
+    }
+
+    pause.onclick = function () {
+      animate.pause()
+    }
+
+    resume.onclick = function () {
+      animate.resume()
+    }
+
+
+  </script>
+</body>
+</html>
