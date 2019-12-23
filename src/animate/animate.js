@@ -53,10 +53,11 @@ function Animate(options = {}) {
   this._updateCallback = options.onUpdate
 
   this._startTime = Date.now()
-  this._differenceTime = 0
+  this._differenceTime = 0 
   this._repeatCount = options.repeat
   this._reversed = false
   this._state = STATE.PENDDING
+  this._chainInstances = []
 
   this._normalize()
   this._updateValueFunc = this._updateValueFactory()
@@ -86,6 +87,8 @@ Animate.prototype = {
     }
 
     this._update()
+
+    return this
   },
 
   pause: function () {
@@ -97,6 +100,8 @@ Animate.prototype = {
     this._state = STATE.PAUSED
     const nowTime = Date.now()
     this._differenceTime = nowTime - this._startTime
+
+    return this
   },
 
   resume: function () {
@@ -109,10 +114,46 @@ Animate.prototype = {
     const nowTime = Date.now()
     this._startTime = nowTime - this._differenceTime
     this._update()
+
+    return this
   },
 
-  chain: function () {
+  chain: function (animate) {
 
+    if (!animate || !(animate instanceof Animate)) {
+      return
+    }
+
+    this._chainInstances.push(animate)
+
+    return this
+  },
+
+  onUpdate: function (callback) {
+
+    if (isTypeof(callback, 'Function')) {
+      this._updateCallback = callback
+    }
+
+    return this
+  },
+
+  onStart: function (callback) {
+
+    if (isTypeof(callback, 'Function')) {
+      this._startCallback = callback
+    }
+
+    return this
+  },
+
+  onEnd: function (callback) {
+
+    if (isTypeof(callback, 'Function')) {
+      this._endCallback = callback
+    }
+
+    return this
   },
 
   _update: function () {
@@ -159,7 +200,6 @@ Animate.prototype = {
 
           return
         } 
-
         this._reverseValue()
       }
 
@@ -168,6 +208,13 @@ Animate.prototype = {
         this._repeatCount--
         this._state = STATE.PENDDING
         this.start()
+
+        return
+      }
+
+      if (this._chainInstances.length) {
+        this._state = STATE.PENDDING
+        this._chainInstances.shift().start()
 
         return
       }

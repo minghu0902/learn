@@ -14,8 +14,8 @@
       position: absolute;
       top: 20px;
       left: 100px;
-      width: 50px;
-      height: 50px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       background: burlywood;
     }
@@ -47,25 +47,27 @@
     const animate = new Animate({
       from: { left: 0 },
       to: { left: 300 },
-      duration: 1,
+      duration: 2,
       delay: 1,
       reverse: true,
-      repeat: 2,
-      easing: 'Elastic.In',
-      onStart: function () {
+      repeat: 0,
+      easing: 'Elastic.In'
+    })
+
+    animate
+      .onStart(() => {
         console.log('start')
-      },
-      onUpdate: function (current, from, to) {
+      })
+      .onUpdate((current, from, to) => {
         console.log('update', current)
         ball.style.transform = 'translate3d(' + current.left + 'px, 0, 0)'
-      },
-      onEnd: function () {
+      })
+      .onEnd(() => {
         console.log('end')
-      }
-    })
+      })
     
     start.onclick = function () {
-      animate.start()
+      animate.start().chain(animate).chain(animate)
     }
 
     pause.onclick = function () {
