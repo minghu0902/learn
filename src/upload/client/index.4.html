@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>文件上传-分片上传</title>
+  <style>
+    
+  </style>
+</head>
+<body>
+  <form id="form">
+    <input id="files" type="file" name="file" multiple>
+    <button type="submit">上传</button>
+  </form>
+
+  <script>
+    var oForm = document.getElementById('form')
+    var oFile = document.getElementById('files')
+    var oProgress = document.getElementById('progress')
+    
+    // 2M
+    var CHUNK_SIZE = 2 * 1024 * 1024
+
+    oForm.onsubmit = function (e) {
+      e.preventDefault()
+
+      var files = oFile.files
+
+      if (files.length === 0) {
+        return alert('请选择文件')
+      }
+      
+      // 遍历文件
+      for (var i = 0; i < files.length; i++) {
+
+        var file = files[i]
+        var start = 0
+        var end = 0
+        var chunks = []
+        var type = ''
+
+        // 文件切片
+        if (file.size > CHUNK_SIZE) {
+          type = 'blob'
+          while (true) {
+            end += CHUNK_SIZE
+            var blob = file.slice(start, end)
+            start += CHUNK_SIZE
+            if (!blob.size) {
+              break
+            }
+            chunks.push(blob)
+          }
+        } else {
+          chunks.push(file)
+        }
+
+        // 上传文件
+        var token = Date.now() // 文件的唯一标识
+        var fileName = file.name
+        var filePath = file.path
+        var chunksLen = chunks.length
+        var count = 0 // 计数已上传chunk
+
+        for (var j = 0; j < chunksLen; j++) {
+
+          var fd = new FormData()
+          fd.append('token', token)
+          fd.append('index', j)
+          fd.append('file', chunks[j])
+          fd.append('name', fileName)
+          fd.append('type', type) // 表示当前是分片文件
+          
+          // 发送请求
+          request(fd, function () {
+            count++
+
+            // 上传完成，发起合并请求
+            if (count === chunksLen) {
+              var fd_m = new FormData()
+              fd_m.append('token', token)
+              fd_m.append('name', fileName)
+              fd_m.append('total', chunksLen)
+              
+              if (file.size > CHUNK_SIZE) {
+                fd_m.append('type', 'merge')
+              }
+              
+              request(fd_m, function () {
+                // 合并完成
+                console.log('上传成功')
+              })
+            }
+          })
+        }
+      }
+    }    
+
+
+    function request (data, cb) {
+      var xhr = new XMLHttpRequest()
+      
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          cb && cb()
+        }
+      }
+
+      xhr.open('POST', 'http://192.168.0.102:8888/upload')
+      xhr.send(data)
+    }
+  </script>
+</body>
+</html>

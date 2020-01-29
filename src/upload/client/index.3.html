@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>文件上传-多文件单进度</title>
+  <style>
+    
+  </style>
+</head>
+<body>
+  <form id="form">
+    <input id="files" type="file" name="file" multiple>
+    <button type="submit">上传</button>
+  </form>
+  <progress id="progress" value="0" max="100"></progress>
+
+  <script>
+   var oForm = document.getElementById('form')
+   var oFile = document.getElementById('files')
+   var oProgress = document.getElementById('progress')
+
+   oForm.onsubmit = function (e) {
+     e.preventDefault()
+
+     var files = oFile.files
+
+     if (!files.length) {
+       console.log('请选择文件')
+       return
+     }
+
+     var formData = new FormData()
+
+     for (var i = 0; i < files.length; i++) {
+       formData.append('file', files[i])
+     }
+
+     var xhr = new XMLHttpRequest()
+     
+     // 上传进度
+     xhr.upload.onprogress = function (event) {
+       var progress = (event.loaded / event.total).toFixed(3)
+       oProgress.value = progress * 100
+       console.log('upload', progress)
+     }
+    
+     // 下载进度
+     xhr.onprogress = function (event) {
+       var progress = (event.loaded / event.total).toFixed(3)
+       console.log(progress)
+     }
+
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         setTimeout(function () {
+           alert('上传成功')
+         })
+       } 
+     }
+
+     xhr.open('POST', 'http://192.168.0.102:8888/upload')
+     xhr.send(formData)
+   }
+  </script>
+</body>
+</html>
