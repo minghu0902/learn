@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.11/vue.js"></script>
+    <script src="https://cdn.bootcss.com/vuex/3.1.3/vuex.js"></script>
+    <!-- <script src="./util.js"></script>
+    <script src="./module/module.js"></script>
+    <script src="./module/module-collection.js.js"></script>
+    <script src="./store.js"></script> -->
+
+    <script>
+        var store = new Vuex.Store({
+            state: {
+                host: 'www.baidu.com'
+            },
+            getters: {
+                host(state) {
+                    return state.host
+                }
+            },
+            modules: {
+                a: {
+                    namespaced: true,
+                    state: {
+                        name: 'a'
+                    },
+                    getters: {
+                        name(state) {
+                            return state.name
+                        }
+                    }
+                }
+            }
+        })
+
+        var vm = new Vue({
+            el: '#app',
+            template: '<div>vue</div>',
+            store
+        })
+
+    </script>
+</body>
+</html>
