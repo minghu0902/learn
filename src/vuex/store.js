@@ -19,17 +19,20 @@ Store.prototype = {
         if (!entry) {
             return
         }
-        
         this._withCommit(() => {
             entry.forEach(function commitIterator(handler) {
                 handler(payload)
             })
         })
-
     },
     dispatch: function (type, payload) {
         var entry = this._actions[type]
-
+        if (!entry) {
+            return
+        }
+        return entry.length > 1 
+            ? Promise.all(entry.map(handler => handler(payload)))
+            : entry[0](payload)
     },
     /** 订阅函数，返回取消订阅的函数 */
     subscribe: function (fn) {
@@ -71,6 +74,27 @@ function installModule(store, rootState, path, module) {
 function makeLocalContext(store, namespace, path) {
     var noNamespace = namespace === ''
 
+    var local = {
+        commit: noNamespace ? store.commit : (type, payload) => {
+            store.commit(namespace + type, payload)
+        },
+        dispatch: noNamespace ? store.dispatch : (type, payload) => {
+            return store.dispatch(namespace + type, payload)
+        }
+    }
+
+    Object.defineProperties(local, {
+        getters: {
+            get() {
+                return noNamespace ? store.getters : makeLocalGetters(store, namespace)
+            }
+        },
+        state: {
+            get() {
+
+            }
+        }
+    })
 }
 
 function makeLocalGetters(store, namespace) {
@@ -78,7 +102,6 @@ function makeLocalGetters(store, namespace) {
 
     var splitPos = namespace.length
     Object.keys(store.getters).forEach(type => {
-        
         if (type.slice(0, splitPos) !== namespace) {
             return
         }
@@ -133,4 +156,10 @@ function registerGetter(store, type, rawGetter, local) {
             store.getters
         )
     }
+}
+
+function getNestedState(state, path) {
+    return path.length
+        ? path.reduce((state, key) => state[key], state)
+        : state
 }
