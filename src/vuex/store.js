@@ -67,8 +67,31 @@ function installModule(store, rootState, path, module) {
         store._modulesNamespaceMap[namespace] = module
     }
 
+    if (!isRoot) {
+        var parentState = getNestedState(rootState, path.slice(0, -1))
+        var moduleName = path[path.length - 1]
+        store._withCommit(() => {
+            Vue.set(parentState, moduleName, module.state)
+        })
+    }
+
     var local = module.context = makeLocalContext(store, namespace, path)
 
+    module.forEachMutations((fn, key) => {
+        registerMutation(store, namespace + key, fn, local)
+    })
+
+    module.forEachActions((fn, key) => {
+        registerAction(store, namespace + key, fn, local)
+    })
+
+    module.forEachGetter((fn, key) => {
+        registerGetter(store, namespace + key, fn, local)
+    })
+
+    module.forEachChild((child, key) => {
+        installModule(store, rootState, path.concat(key), child)
+    })
 }
 
 function makeLocalContext(store, namespace, path) {
@@ -91,7 +114,7 @@ function makeLocalContext(store, namespace, path) {
         },
         state: {
             get() {
-
+                return noNamespace ? store.state : getNestedState(store.state, path)
             }
         }
     })
