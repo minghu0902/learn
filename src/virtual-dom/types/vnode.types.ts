@@ -8,6 +8,7 @@ export interface IVNode {
 	data?: IVNodeData
 	children?: IVNode[]
 	text?: string
+	elm?: Element | Text
 }
 
 export interface IVNodeData {

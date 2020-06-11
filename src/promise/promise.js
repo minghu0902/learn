@@ -158,6 +158,9 @@
     }
 
     Promise.resolve = function(value) {
+        if (value instanceof Promise) {
+            return value
+        }
         return new Promise(resolve => {
             resolve(value);
         });
@@ -205,6 +208,20 @@
                     reject(reason);
                 })
             }
+        })
+    }
+
+    Promise.retry = function(promises, n) {
+        return new Promise((resolve, reject) => {
+            promises.then(value => {
+                resolve(value)
+            }, err => {
+                if (n <= 0) {
+                    reject(err)
+                } else {
+                    this.retry(promises, --n)
+                }
+            })
         })
     }
 
