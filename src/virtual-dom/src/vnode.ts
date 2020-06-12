@@ -1,4 +1,4 @@
-import { IVNode, IVNodeData } from './types/vnode.types'
+import { IVNode, IVNodeData } from '../types/vnode.types'
 
 export class VNode implements IVNode {
 	tag?: string

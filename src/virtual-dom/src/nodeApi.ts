@@ -4,8 +4,16 @@ export function createElement(tag: string) {
 	return document.createElement(tag)
 }
 
+export function createTextNode(text: string) {
+	return document.createTextNode(text)
+}
+
 export function insertBefore(parentNode: Node, newNode: Node, refNode: Node) {
 	return parentNode.insertBefore(newNode, refNode)
+}
+
+export function appendChild(node: Node, childNode: Node) {
+	return node.appendChild(childNode)
 }
 
 export function removeChild(node: Node, childNode: Node) {
@@ -22,7 +30,9 @@ export function nextSibling(node: Node) {
 
 export default {
 	createElement,
+	createTextNode,
 	insertBefore,
+	appendChild,
 	removeChild,
 	parentNode,
 	nextSibling
