@@ -6,6 +6,7 @@ export class VNode implements IVNode {
 	children?: IVNode[]
 	text?: string
 	elm?: Element | Text
+	key?: string | number
 
 	constructor(
 		tag?: string,

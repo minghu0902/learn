@@ -1,3 +1,5 @@
+import { On } from "./module.type";
+import { Hooks } from "./hooks.type";
 
 export interface IPlainObject {
 	[key: string]: any
@@ -8,13 +10,17 @@ export interface IVNode {
 	data?: IVNodeData
 	children?: IVNode[]
 	text?: string
-	elm?: Element | Text
+	elm?: Node
+	key?: string | number
 }
 
 export interface IVNodeData {
 	key?: string | number
-	class?: string
-	style?: IPlainObject
+	class?: { [key: string]: boolean }
+	style?: { [key: string]: string }
 	props?: IPlainObject
 	attrs?: IPlainObject
+	on?: On
+	ns?: string
+	hook?: Hooks
 }

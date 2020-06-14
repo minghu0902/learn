@@ -1,14 +1,22 @@
-import { INodeApi } from "./types/nodeApi.type";
+import { INodeApi } from "../types/nodeApi.type";
 
 export function createElement(tag: string) {
 	return document.createElement(tag)
+}
+
+export function createElementNs(ns: string, tag: string) {
+	return document.createElementNS(ns, tag)
 }
 
 export function createTextNode(text: string) {
 	return document.createTextNode(text)
 }
 
-export function insertBefore(parentNode: Node, newNode: Node, refNode: Node) {
+export function setTextContent(node: Node, text: string | null) {
+	return node.textContent = text
+}
+
+export function insertBefore(parentNode: Node, newNode: Node, refNode: Node | null) {
 	return parentNode.insertBefore(newNode, refNode)
 }
 
@@ -30,7 +38,9 @@ export function nextSibling(node: Node) {
 
 export default {
 	createElement,
+	createElementNs,
 	createTextNode,
+	setTextContent,
 	insertBefore,
 	appendChild,
 	removeChild,

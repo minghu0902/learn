@@ -1,5 +1,3 @@
-import { IPlainObject } from "./types/vnode.types"
-
 export function isUndef(v: any): boolean {
 	return v === null || v === undefined
 }

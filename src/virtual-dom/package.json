@@ -1,8 +1,9 @@
 {
   "name": "virtual-dom",
   "version": "1.0.0",
-  "description": "",
-  "main": "",
+  "description": "vnode",
+  "main": "./src/index",
+  "module": "./src/index",
   "scripts": {
   },
   "author": "",
