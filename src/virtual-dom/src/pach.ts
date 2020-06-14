@@ -1,4 +1,4 @@
-import { IVNode, IVNodeData, IPlainObject } from "../types/vnode.types";
+import { IVNode, IVNodeData, IPlainObject } from "../types/vnode.type";
 import { isDef, isUndef, isArray, isPrimitive } from "./util";
 import { IModule, ModuleHooks } from "../types/module.type";
 import { INodeApi } from "../types/nodeApi.type";
@@ -113,12 +113,12 @@ export function createPatchFunction(modules: Array<Partial<IModule>>, nodeApi: I
 		if (refElm) {
 			nodeApi.insertBefore(parentElm, elm, refElm)
 		} else {
-			nodeApi.appendChild(elm, parentElm)
+			nodeApi.appendChild(parentElm, elm)
 		}
 	}
 
 	function createChildren(vnode: IVNode, children: IVNode[], insertedVnodeQueue: IVNode[]) {
-		if (isArray(children)) {
+		if (isArray(children) && children.length) {
 			for (const child of children) {
 				createElm(child, insertedVnodeQueue, vnode.elm)
 			}
@@ -216,21 +216,21 @@ export function createPatchFunction(modules: Array<Partial<IModule>>, nodeApi: I
 
 		while(oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
 			if (isUndef(oldStartVnode)) {
-				oldStartIdx++
+				oldStartVnode = oldCh[++oldStartIdx]
 			} else if (isUndef(oldEndVnode)) {
-				oldEndIdx--
+				oldEndVnode = oldCh[--oldEndIdx]
 			} else if (isUndef(newStartVnode)) {
-				newStartIdx++
+				newStartVnode = ch[++newStartIdx]
 			} else if (isUndef(newEndVnode)) {
-				newEndIdx--
+				newEndVnode = ch[--newEndIdx]
 			} else if (isSameVnode(oldStartVnode, newStartVnode)) {
 				patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue)
-				oldStartIdx++
-				newStartIdx++
+				oldStartVnode = oldCh[++oldStartIdx]
+				newStartVnode = ch[++newStartIdx]
 			} else if (isSameVnode(oldEndVnode, newEndVnode)) {
 				patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue)
-				oldEndIdx--
-				newEndIdx--
+				oldEndVnode = oldCh[--oldEndIdx]
+				newEndVnode = ch[--newEndIdx]
 			} else if (isSameVnode(oldStartVnode, newEndVnode)) {
 				patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue)
 				nodeApi.insertBefore(parentElm, newEndVnode.elm!, nodeApi.nextSibling(oldEndVnode.elm!))
@@ -294,7 +294,7 @@ export function createPatchFunction(modules: Array<Partial<IModule>>, nodeApi: I
 			invokeUpdateHooks(oldVnode, vnode)
 		}
 
-		const elm = vnode.elm as Node
+		const elm = vnode.elm = oldVnode.elm as Node
 		const oldCh = oldVnode.children
 		const ch = vnode.children
 

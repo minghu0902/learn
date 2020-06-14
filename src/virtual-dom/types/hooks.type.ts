@@ -1,4 +1,4 @@
-import { IVNode } from "./vnode.types";
+import { IVNode } from "./vnode.type";
 
 export type Hooks = {
   prePatch: (oldVnode: IVNode, vnode: IVNode) => any
