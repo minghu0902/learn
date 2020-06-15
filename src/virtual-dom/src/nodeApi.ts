@@ -12,11 +12,11 @@ export function createTextNode(text: string) {
 	return document.createTextNode(text)
 }
 
-export function setTextContent(node: Node, text: string | null) {
+export function setTextContent(node: Node, text: string) {
 	return node.textContent = text
 }
 
-export function insertBefore(parentNode: Node, newNode: Node, refNode: Node | null) {
+export function insertBefore(parentNode: Node, newNode: Node, refNode: Node) {
 	return parentNode.insertBefore(newNode, refNode)
 }
 
