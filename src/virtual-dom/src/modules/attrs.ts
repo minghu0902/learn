@@ -1,5 +1,5 @@
-import { IVNode, IPlainObject } from "../../types/vnode.type";
-import { isDef, isUndef } from "../util";
+import { IVNode } from "../../types/vnode.type";
+import { isUndef, isPlainObject } from "../util";
 
 const xlinkNS = 'http://www.w3.org/1999/xlink'
 
@@ -36,7 +36,7 @@ function updateAttrs(oldVnode: IVNode, vnode: IVNode) {
     return
   }
 
-  if (isDef(oldAttrs) && isDef(attrs)) {
+  if (isPlainObject(oldAttrs) && isPlainObject(attrs)) {
     for (const key in oldAttrs) {
       if (isUndef(attrs[key])) {
         removeAttr(elm, key)
@@ -45,11 +45,11 @@ function updateAttrs(oldVnode: IVNode, vnode: IVNode) {
     for (const key in attrs) {
       setAttr(elm, key, attrs[key])
     }
-  } else if (isDef(oldAttrs)) {
+  } else if (isPlainObject(oldAttrs)) {
     for (const key in oldAttrs) {
       removeAttr(elm, key)
     }
-  } else if (isDef(attrs)) {
+  } else if (isPlainObject(attrs)) {
     for (const key in attrs) {
       setAttr(elm, key, attrs[key])
     }
