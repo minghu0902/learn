@@ -32,9 +32,8 @@ function updateAttrs(oldVnode: IVNode, vnode: IVNode) {
   const oldAttrs = oldVnode.data.attrs
   const attrs = vnode.data.attrs
 
-  if (oldAttrs === attrs) {
-    return
-  }
+  if (!oldAttrs && !attrs) return;
+  if (oldAttrs === attrs) return;
 
   if (isPlainObject(oldAttrs) && isPlainObject(attrs)) {
     for (const key in oldAttrs) {

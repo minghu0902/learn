@@ -1,4 +1,4 @@
-import { IVNode, IPlainObject } from "../../types/vnode.type";
+import { IVNode } from "../../types/vnode.type";
 import { isPlainObject, isUndef } from "../util";
 
 
@@ -9,9 +9,8 @@ function updateClasses(oldVnode: IVNode, vnode: IVNode) {
   const classList = Array.from(elm.classList)
   const classes = vnode.data.class
 
-  if (oldClasses === classes) {
-    return
-  }
+  if (!oldClasses && !classes) return;
+  if (oldClasses === classes) return;
 
   // 移出不存在的 class
   classList.forEach(key => {
