@@ -1,14 +1,14 @@
-import { IVNode } from "../../types/vnode.type";
+import { IVNode, IPlainObject } from "../../types/vnode.type";
 import { isPlainObject } from "../util";
 
 function updateProps(oldVnode: IVNode, vnode: IVNode) {
 
-  const elm = oldVnode.elm as Element
-  const oldProps = oldVnode.data.props
-  const props = vnode.data.props
+  const elm = vnode.elm as Element
+  const oldProps = oldVnode.data.props as IPlainObject
+  const props = vnode.data.props as IPlainObject
 
-  if (!oldProps && !props) return;
-  if (oldProps === props) return;
+  if (!oldProps && !props) return
+  if (oldProps === props) return
 
   if (isPlainObject(props)) {
     for (const key in props) {

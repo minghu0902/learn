@@ -28,7 +28,7 @@ function removeAttr(elm: Element, key: string) {
 }
 
 function updateAttrs(oldVnode: IVNode, vnode: IVNode) {
-  const elm = oldVnode.elm as Element
+  const elm = vnode.elm as Element
   const oldAttrs = oldVnode.data.attrs
   const attrs = vnode.data.attrs
 

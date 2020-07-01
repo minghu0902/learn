@@ -3,8 +3,8 @@ import { isPlainObject, isUndef } from "../util";
 
 
 function updateClasses(oldVnode: IVNode, vnode: IVNode) {
-  
-  const elm = oldVnode.elm as Element
+
+  const elm = vnode.elm as Element
   const oldClasses = oldVnode.data.class
   const classList = Array.from(elm.classList)
   const classes = vnode.data.class

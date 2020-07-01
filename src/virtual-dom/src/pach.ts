@@ -130,7 +130,7 @@ export function createPatchFunction(modules: Array<Partial<IModule>>, nodeApi: I
 	function createElm(vnode: IVNode, insertedVnodeQueue: IVNode[], parentElm?: Node) {
 		const tag = vnode.tag
 		const children = vnode.children
-		
+
 		if (isDef(tag)) {
 			// 创建元素节点
 			if (vnode.data && typeof vnode.data.ns === 'string') {
@@ -288,15 +288,15 @@ export function createPatchFunction(modules: Array<Partial<IModule>>, nodeApi: I
 		if (isDef(i = vnode.data) && isDef(hook = i.hook) && isDef(i = hook.prePatch)) {
 			i(oldVnode, vnode)
 		}
-		
-		// 执行 module update hooks
-		if (vnode.data) {
-			invokeUpdateHooks(oldVnode, vnode)
-		}
 
 		const elm = vnode.elm = oldVnode.elm as Node
 		const oldCh = oldVnode.children
 		const ch = vnode.children
+
+		// 执行 module update hooks
+		if (vnode.data) {
+			invokeUpdateHooks(oldVnode, vnode)
+		}
 
 		if (isUndef(vnode.text)) {
 			if (isArray(oldCh) && isArray(ch)) {
