@@ -12,33 +12,28 @@
         this.onFulfiledCallbacks = [];
         this.onRejectedCallbacks = [];
 
-        // resolve 和 reject 的执行必须是异步，为了保证 onFulfiledCallbacks 和 onRejectedCallbacks 能收集到后面 then 函数中的所有回调 
         function resolve(value) {
             if(value instanceof Promise) {
                 return value.then(resolve, reject);
             }
 
-            setTimeout(() => {
-                if(self.state === PENDING) {
-                    self.state = FULFILLED;
-                    self.value = value;
-                    self.onFulfiledCallbacks.forEach(cb => {
-                        cb(self.value);
-                    })
-                }
-            })
+            if(self.state === PENDING) {
+                self.state = FULFILLED;
+                self.value = value;
+                self.onFulfiledCallbacks.forEach(cb => {
+                    cb(self.value);
+                })
+            }
         }
 
         function reject(reason) {
-            setTimeout(() => {
-                if(self.state === PENDING) {
-                    self.state = REJECTED;
-                    self.reason = reason;
-                    self.onRejectedCallbacks.forEach(cb => {
-                        cb(self.reason);
-                    })
-                }
-            })
+            if(self.state === PENDING) {
+                self.state = REJECTED;
+                self.reason = reason;
+                self.onRejectedCallbacks.forEach(cb => {
+                    cb(self.reason);
+                })
+            }
         }
 
         if(typeof fn === 'function') {
@@ -56,7 +51,7 @@
             return new TypeError('循环引用');
         }
         if(x instanceof Error) {
-            reject(x);
+            return reject(x);
         }
         if(x instanceof Promise) {
             if(x.state === PENDING) {
@@ -130,7 +125,7 @@
                         } catch(e) {
                             reject(e);
                         }
-                    })
+                    }, 0)
                 } else if(this.state === REJECTED) {
                     setTimeout(() => {
                         try {
@@ -139,7 +134,7 @@
                         } catch(e) {
                             reject(e);
                         }
-                    })
+                    }, 0)
                 }
             })
 
@@ -201,27 +196,35 @@
             return new TypeError('参数必须是数组');
         }
         return new Promise((resolve, reject) => {
-            for(let i=0; i<promises.length; i++) {
-                promises[i].then(value => {
-                    resolve(value);
-                }, reason => {
-                    reject(reason);
-                })
+            try {
+                for(let i=0; i<promises.length; i++) {
+                    promises[i].then(value => {
+                        resolve(value);
+                    }, reason => {
+                        reject(reason);
+                    })
+                }
+            } catch(e) {
+                reject(e)
             }
         })
     }
 
-    Promise.retry = function(promises, n) {
+    Promise.retry = function(p, n) {
         return new Promise((resolve, reject) => {
-            promises.then(value => {
-                resolve(value)
-            }, err => {
-                if (n <= 0) {
-                    reject(err)
-                } else {
-                    this.retry(promises, --n)
-                }
-            })
+            try {
+                p.then(value => {
+                    resolve(value)
+                }, err => {
+                    if (n <= 0) {
+                        reject(err)
+                    } else {
+                        return this.retry(p, --n)
+                    }
+                })
+            } catch(e) {
+                reject(e)
+            }
         })
     }
 
