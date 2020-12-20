@@ -20,10 +20,10 @@ function flatten(arr=[], n=1) {
 }
 
 function flatten(arr=[]) {
-    const result = []
+    let result = []
     for(let item of arr) {
         if(Array.isArray(item)) {
-            flatten(item, result);
+            result = result.concat(flatten(item));
         } else {
             result.push(item);
         }
