@@ -240,7 +240,7 @@ export function createPatchFunction(modules: Array<Partial<IModule>>, nodeApi: I
 				patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue)
 				nodeApi.insertBefore(parentElm, newStartVnode.elm!, oldStartVnode.elm!)
 				oldEndVnode = oldCh[--oldEndIdx]
-				newStartVnode = ch[--newStartIdx]
+				newStartVnode = ch[++newStartIdx]
 			} else {
 				if (!oldKeyToIdx) {
 					// 生成 oldCH 中 key 和 下标 的映射关系
@@ -252,11 +252,12 @@ export function createPatchFunction(modules: Array<Partial<IModule>>, nodeApi: I
 					const targetVnode = oldCh[idx]
 					if (targetVnode.tag !== newStartVnode.tag) {
 						// key 相同，tag 不同，则需要重新创建元素，并插入到父节点中
-						nodeApi.insertBefore(parentElm, createElm(targetVnode, insertedVnodeQueue), oldStartVnode.elm!)
+						nodeApi.insertBefore(parentElm, createElm(newStartVnode, insertedVnodeQueue), oldStartVnode.elm!)
 					} else {
 						// key 和 tag 都相同，则进行patch操作
 						// patch 之后插入到父节点并将 oldch 中的目标节点位置设为空
 						patchVnode(targetVnode, newStartVnode, insertedVnodeQueue)
+						// 将 oldCh 中的目标节点插入到当前 oldStartVnode.elm 的前面
 						nodeApi.insertBefore(parentElm, targetVnode.elm!, oldStartVnode.elm!)
 						// 此处设置为空之后，为了循环到 idx处时，走 oldStartIdx++ 的逻辑
 						oldCh[idx] = null as any

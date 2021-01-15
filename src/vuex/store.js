@@ -30,7 +30,7 @@ Store.prototype = {
         if (!entry) {
             return
         }
-        return entry.length > 1 
+        return entry.length > 1
             ? Promise.all(entry.map(handler => handler(payload)))
             : entry[0](payload)
     },
