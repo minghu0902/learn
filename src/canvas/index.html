@@ -1,0 +1,36 @@
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  #grid {
+    z-index: 0;
+  }
+  #canvas {
+    z-index: 1;
+  }
+</style>
+<canvas id="grid"></canvas>
+<canvas id="canvas"></canvas>
+<script src="./draw.js"></script>
+<script>
+  var canvas = document.getElementById('canvas')
+  var ctx = canvas.getContext('2d')
+  var gridCanvas = document.getElementById('grid')
+  var gridCanvasCtx = gridCanvas.getContext('2d')
+  var width = window.innerWidth
+  var height = window.innerHeight
+
+  canvas.width = gridCanvas.width = width
+  canvas.height = gridCanvas.height = height
+
+  C.drawGrid(gridCanvasCtx, '#ccc', 20, 20)
+  C.drawRoundRect(ctx, 100, 100, 20, 200, 200)
+  ctx.stroke()
+
+</script>
